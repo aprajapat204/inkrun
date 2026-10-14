@@ -16,14 +16,13 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
           cache: 'gradle'
-      # Use a more stable Android setup - avoid the broken tools package
+      # Use correct inputs for setup-android v3
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
         with:
-          api-level: 34
-          ndk-version: r26d
-          emulator: false
-          cmdline-tools-version: '11.0'
+          cmdline-tools-version: 'latest'
+          accept-android-sdk-licenses: 'true'
+          packages: 'platforms;android-34 build-tools;34.0.0'
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Print versions
@@ -31,7 +30,7 @@ jobs:
           ./gradlew --version
           echo "ANDROID_HOME=$ANDROID_HOME"
           ls -la $ANDROID_HOME
-          echo "=== Platform tools ==="
+          echo "=== Platforms ==="
           ls -la $ANDROID_HOME/platforms/ 2>/dev/null || echo "No platforms dir"
       - name: Build Debug APK
         run: ./gradlew assembleDebug --stacktrace --info
